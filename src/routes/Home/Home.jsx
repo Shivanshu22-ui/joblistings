@@ -9,17 +9,16 @@ import { useSelector } from "react-redux";
 
 const Home = () => {
   const [filter, setFilter] = useState({
-    minExp:0,
-    location:'',
-    role:'',
-    miniPay:''
+    minExp: "",
+    location: "",
+    role: "",
+    miniPay: "",
   });
   const [query, setQuery] = useState("");
   const [limit, setLimit] = useState(10);
   const { loading, error, hasMore } = useJobsHook(limit, setJobListings);
-  const {jobListings} = useSelector((state)=>state.jobListing);
+  const { jobListings } = useSelector((state) => state.jobListing);
 
-  console.log(jobListings);
   const observer = useRef();
   const lastBookElementRef = useCallback(
     (node) => {
@@ -35,9 +34,21 @@ const Home = () => {
     [loading, hasMore]
   );
 
+  console.log("loading", loading, "hasmore", hasMore, "error", error);
+
+  // if(loading){
+  //   return <div>loading...</div>
+  // }
+  // if(error){
+  //   return <div>error...</div>
+  // }
   return (
     <Box>
-      <FilterComponent setQuery={setQuery} setFilter={setFilter}/>
+      <FilterComponent
+        setQuery={setQuery}
+        setFilter={setFilter}
+        filter={filter}
+      />
       <Box
         sx={{
           display: "flex",
@@ -49,20 +60,39 @@ const Home = () => {
       >
         {jobListings
           .filter((item) => {
-            return query.toLowerCase() === ""
-              ? item
-              : item.companyName.toLowerCase().includes(query.toLowerCase());
+            const queryMatch =
+              query.toLowerCase() === "" ||
+              item?.companyName.toLowerCase().includes(query.toLowerCase());
+            const roleMatch =
+              filter.role === "" ||
+              item?.jobRole.toLowerCase().includes(filter.role.toLowerCase());
+            const expMatch =
+              filter.minExp === 0 || item.minExp >= filter.minExp;
+            const locationMatch =
+              filter.location === "" ||
+              item?.location
+                .toLowerCase()
+                .includes(filter.location.toLowerCase());
+            const miniPay =
+              filter.miniPay === 0 || item.minJdSalary >= filter.miniPay;
+
+            return (
+              queryMatch && expMatch && roleMatch && locationMatch && miniPay
+            );
           })
-          .map((job, id, filter) => {
-            if (filter.length === id + 1)
+          .map((job, id, filterArr) => {
+            if (filterArr.length === id + 1) {
               return (
                 <div ref={lastBookElementRef}>
                   <CardsComponent data={job} />
                 </div>
               );
-            else return <CardsComponent data={job} />;
+            } else return <CardsComponent data={job} />;
           })}
       </Box>
+
+      {loading && !error && "Loading..."}
+      {error && "Error"}
     </Box>
   );
 };

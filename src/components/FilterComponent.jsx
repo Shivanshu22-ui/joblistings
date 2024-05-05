@@ -2,7 +2,7 @@ import React from "react";
 import { Box, TextField } from "@mui/material";
 import CustomSelect from "./CustomSelect";
 
-const FilterComponent = ({setQuery,setFilter}) => {
+const FilterComponent = ({setQuery,setFilter,filter}) => {
   return (
     <Box>
       <Box
@@ -14,10 +14,10 @@ const FilterComponent = ({setQuery,setFilter}) => {
           flexWrap: "wrap",
         }}
       >
-        <CustomSelect setFilter={setFilter}/>
-        <CustomSelect setFilter={setFilter}/>
-        <CustomSelect setFilter={setFilter}/>
-        <CustomSelect setFilter={setFilter}/>
+        <CustomSelect setFilter={setFilter} name='minExp' label='Min Experience' values = {minExp} filter={filter}/>
+        <CustomSelect setFilter={setFilter} name='role' label='Role' values = {role} filter={filter}/>
+         <CustomSelect setFilter={setFilter} name='location' label='Location' values = {location} filter={filter}/>
+        <CustomSelect setFilter={setFilter} name='miniPay' label='Minimun Pay' values = {minPay} filter={filter}/>
         <TextField
           id="outlined-basic"
           label="Search company name"
@@ -30,3 +30,8 @@ const FilterComponent = ({setQuery,setFilter}) => {
 };
 
 export default FilterComponent;
+
+const minExp = [0,5,10,15,20];
+const role = ['Frontend','Backend','IOS','Android','tech lead'];
+const location = ['Chennai','Mumbai','Delhi','Remote'];
+const minPay = [3,5,10,20,50,100]

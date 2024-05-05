@@ -15,34 +15,24 @@ const MenuProps = {
   },
 };
 
-// const names = [
-//   "Oliver Hansen",
-//   "Van Henry",
-//   "April Tucker",
-//   "Ralph Hubbard",
-//   "Omar Alexander",
-//   "Carlos Abbott",
-//   "Miriam Wagner",
-//   "Bradley Wilkerson",
-//   "Virginia Andrews",
-//   "Kelly Snyder",
-// ];
-const CustomSelect = () => {
+const CustomSelect = ({setFilter,name,label,values,filter}) => {
 
   const [personName, setPersonName] = React.useState([]);
 
   const handleChange = (event) => {
-    setPersonName(event.target.value);
+    // setPersonName(event.target.value);
+    setFilter({...filter,[event.target.name]: event.target.value});
   };
 
   return (
     <Box sx={{ m: 1, minWidth: 200, flex: 1, display: "flex" }}>
       <FormControl sx={{ m: 1, minWidth: 200, flex: 1, display: "flex" }}>
-        <InputLabel id="demo-multiple-name-label">Name</InputLabel>
+        <InputLabel id="demo-multiple-name-label">{label}</InputLabel>
         <Select
           labelId="demo-multiple-name-label"
           id="demo-multiple-name"
-          value={personName}
+          value={filter[name]}
+          name={name}
           onChange={handleChange}
           placeholder="values insfes sfsefsef"
           input={<OutlinedInput label="Name" />}
@@ -54,7 +44,7 @@ const CustomSelect = () => {
             },
           }}
         >
-          {[0, 1, 2, 3].map((name) => (
+          {values.map((name) => (
             <MenuItem
               key={name}
               value={name}
