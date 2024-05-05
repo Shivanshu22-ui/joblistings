@@ -10,10 +10,11 @@ const CardsComponent = ({ data }) => {
       m={2}
       sx={{
         display: "flex",
-        // flex: 1,
+        flex: 1,
+        height: "fit-content",
         borderRadius: 4,
         p: 4,
-        boxShadow: "1px 1px 3px grey",
+        border:'1px solid #cecece',
       }}
     >
       <Box>
@@ -33,6 +34,7 @@ const CardsComponent = ({ data }) => {
                 fontSize: { xs: "12px", sm: "14px", md: "16px" },
                 color: "#5b5959c9",
                 fontWeight: 500,
+                textTransform:'capitalize'
               }}
             >
               {data?.companyName}
@@ -41,6 +43,7 @@ const CardsComponent = ({ data }) => {
               sx={{
                 fontSize: { xs: "12px", sm: "14px", md: "16px" },
                 color: "#000",
+                textTransform:'uppercase',
               }}
             >
               {data?.jobRole}
@@ -49,6 +52,7 @@ const CardsComponent = ({ data }) => {
               sx={{
                 fontSize: { xs: "12px", sm: "14px", md: "16px" },
                 color: "#000",
+                textTransform:'capitalize',
               }}
             >
               {data?.location}

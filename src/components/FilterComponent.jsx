@@ -22,6 +22,7 @@ const FilterComponent = ({setQuery,setFilter,filter}) => {
           id="outlined-basic"
           label="Search company name"
           variant="outlined"
+          m={1}
           onChange={(e)=>setQuery(e.target.value)}
         />
       </Box>
@@ -34,4 +35,4 @@ export default FilterComponent;
 const minExp = [0,5,10,15,20];
 const role = ['Frontend','Backend','IOS','Android','tech lead'];
 const location = ['Chennai','Mumbai','Delhi','Remote'];
-const minPay = [3,5,10,20,50,100]
+const minPay = ['3k','5k','10k','20k','50k','100k']

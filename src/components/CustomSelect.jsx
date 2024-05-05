@@ -17,7 +17,6 @@ const MenuProps = {
 
 const CustomSelect = ({setFilter,name,label,values,filter}) => {
 
-  const [personName, setPersonName] = React.useState([]);
 
   const handleChange = (event) => {
     // setPersonName(event.target.value);
@@ -25,7 +24,7 @@ const CustomSelect = ({setFilter,name,label,values,filter}) => {
   };
 
   return (
-    <Box sx={{ m: 1, minWidth: 200, flex: 1, display: "flex" }}>
+    <Box sx={{ m: 1, minWidth: 180, flex: 1, display: "flex" }}>
       <FormControl sx={{ m: 1, minWidth: 200, flex: 1, display: "flex" }}>
         <InputLabel id="demo-multiple-name-label">{label}</InputLabel>
         <Select

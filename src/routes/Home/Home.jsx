@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import { Box } from "@mui/material";
+import React, { useState, useRef, useCallback } from "react";
+import { Alert, Box } from "@mui/material";
 import FilterComponent from "../../components/FilterComponent";
 import CardsComponent from "../../components/CardsComponent";
-import { api } from "../../apis/api";
 import useJobsHook from "../../utils/useJobsHook";
 import { setJobListings } from "../../store/listing.slice";
 import { useSelector } from "react-redux";
+import Loader from "../../components/Loader";
 
 const Home = () => {
   const [filter, setFilter] = useState({
@@ -34,14 +34,22 @@ const Home = () => {
     [loading, hasMore]
   );
 
-  console.log("loading", loading, "hasmore", hasMore, "error", error);
+  const filteredJobs = jobListings.filter((item) => {
+    const queryMatch =
+      query.toLowerCase() === "" ||
+      item?.companyName.toLowerCase().includes(query.toLowerCase());
+    const roleMatch =
+      filter.role === "" ||
+      item?.jobRole.toLowerCase().includes(filter.role.toLowerCase());
+    const expMatch = filter.minExp === 0 || item.minExp >= filter.minExp;
+    const locationMatch =
+      filter.location === "" ||
+      item?.location.toLowerCase().includes(filter.location.toLowerCase());
+    const miniPay =
+      filter.miniPay === "" || item.minJdSalary >= parseInt(filter.miniPay);
+    return queryMatch && expMatch && roleMatch && locationMatch && miniPay;
+  });
 
-  // if(loading){
-  //   return <div>loading...</div>
-  // }
-  // if(error){
-  //   return <div>error...</div>
-  // }
   return (
     <Box>
       <FilterComponent
@@ -49,50 +57,37 @@ const Home = () => {
         setFilter={setFilter}
         filter={filter}
       />
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          gap: 1,
-          flexWrap: "wrap",
-          mt: 4,
-        }}
-      >
-        {jobListings
-          .filter((item) => {
-            const queryMatch =
-              query.toLowerCase() === "" ||
-              item?.companyName.toLowerCase().includes(query.toLowerCase());
-            const roleMatch =
-              filter.role === "" ||
-              item?.jobRole.toLowerCase().includes(filter.role.toLowerCase());
-            const expMatch =
-              filter.minExp === 0 || item.minExp >= filter.minExp;
-            const locationMatch =
-              filter.location === "" ||
-              item?.location
-                .toLowerCase()
-                .includes(filter.location.toLowerCase());
-            const miniPay =
-              filter.miniPay === 0 || item.minJdSalary >= filter.miniPay;
-
-            return (
-              queryMatch && expMatch && roleMatch && locationMatch && miniPay
-            );
-          })
-          .map((job, id, filterArr) => {
-            if (filterArr.length === id + 1) {
-              return (
-                <div ref={lastBookElementRef}>
-                  <CardsComponent data={job} />
-                </div>
-              );
-            } else return <CardsComponent data={job} />;
-          })}
+      <Box minHeight={"100vh"}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 1,
+            flexWrap: "wrap",
+            mt: 4,
+          }}
+        >
+          {filteredJobs.length === 0 ? (
+            <div>{!loading && "No data found"}</div>
+          ) : (
+            filteredJobs.map((job, id) => (
+              <div
+                key={job.id}
+                ref={id === filteredJobs.length - 1 ? lastBookElementRef : null}
+              >
+                <CardsComponent data={job} />
+              </div>
+            ))
+          )}
+        </Box>
+        {loading && !error && <Loader />}
       </Box>
-
-      {loading && !error && "Loading..."}
-      {error && "Error"}
+      {error && (
+        <Alert severity="error">
+          Error in loading jobs, please check your internet connection and try
+          again
+        </Alert>
+      )}
     </Box>
   );
 };
